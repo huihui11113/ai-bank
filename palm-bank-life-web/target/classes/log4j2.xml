@@ -1,0 +1,74 @@
+<Configuration monitorInterval="60">
+    <Properties>
+        <Property name="ROLLING_TRIGGER_SIZE">300MB</Property>
+        <Property name="ROLLOVER_STRATEGY_FROM_INDEX">nomax</Property>
+        <!-- 使用Java系统变量声明日志地址（java -D） -->
+        <Property name="FILE_PATH"  value="logs"/>
+        <Property name="DEBUG_FILE_NAME">debug_${hostName}.log</Property>
+        <Property name="EXCEPTION">%xwEx</Property>
+        <Property name="LEVEL">%5p</Property>
+        <Property name="DATA">yyyy-MM-dd HH:mm:ss.SSS</Property>
+        <Property name="TRACE">
+            [${APP_NAME}, %X{traceId}, %X{spanId}, %X{spanExportable}, %X{EagleEye-TraceID}]
+        </Property>
+        <Property name="CONSOLE_LOG_PATTERN">
+            %clr{%d{${DATA}}}{faint} %clr{${LEVEL}} %clr{${TRACE}} ${sys:CONSOLE_LOG_PATTERN_MESSAGE}
+        </Property>
+        <Property name="FILE_LOG_PATTERN">
+            %d{${DATA}} ${LEVEL} ${TRACE} ${sys:PID} --- [%t] %-40.40c{1.} : %m%n${sys:EXCEPTION}
+        </Property>
+        <property name="APP_NAME" value="palm-bank-life-web"/>
+        <property name="INFO_FILE_NAME">info_${hostName}.log</property>
+        <property name="INFO_FILE_PATTERN">info_%d{yyyy-MM-dd}_%i_${hostName}.log</property>
+        <property name="ERROR_FILE_NAME">error_${hostName}.log</property>
+        <property name="ERROR_FILE_PATTERN">error_%d{yyyy-MM-dd}_%i_${hostName}.log</property>
+        <property name="CONSOLE_LOG_PATTERN_MESSAGE">
+            %clr{${sys:PID}}{magenta} %clr{---}{faint} %clr{%-40.40c{1.}}{cyan} : %m%n${sys:EXCEPTION}
+        </property>
+    </Properties>
+    <Appenders>
+        <Console follow="true" name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="${sys:CONSOLE_LOG_PATTERN}"/>
+        </Console>
+        <RollingRandomAccessFile fileName="${FILE_PATH}/${ERROR_FILE_NAME}"
+                                 filePattern="${FILE_PATH}/${ERROR_FILE_PATTERN}" name="Error">
+            <DefaultRolloverStrategy fileIndex="${ROLLOVER_STRATEGY_FROM_INDEX}"/>
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${ROLLING_TRIGGER_SIZE}"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <ThresholdFilter level="error" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingRandomAccessFile>
+        <!-- 入口日志 包括出参、入参、监控日志等 -->
+        <RollingRandomAccessFile fileName="${FILE_PATH}/${INFO_FILE_NAME}"
+                                 filePattern="${FILE_PATH}/${INFO_FILE_PATTERN}" name="Info">
+            <DefaultRolloverStrategy fileIndex="${ROLLOVER_STRATEGY_FROM_INDEX}"/>
+            <PatternLayout pattern="${FILE_LOG_PATTERN}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="${ROLLING_TRIGGER_SIZE}"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+        </RollingRandomAccessFile>
+    </Appenders>
+    <Loggers>
+        <Logger additivity="false" level="info" name="org.springframework">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Logger additivity="false" level="info"
+                name="org.apache.http.impl.conn.PoolingHttpClientConnectionManager">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef level="info" ref="Info"/>
+            <AppenderRef level="error" ref="Error"/>
+        </Root>
+        <!--        <logger additivity="false" level="info" name="accessLog">-->
+        <!--            <AppenderRef ref="Console"/>-->
+        <!--        </logger>-->
+    </Loggers>
+
+
+</Configuration>

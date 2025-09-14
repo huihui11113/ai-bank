@@ -1,0 +1,55 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /palm/bank
+
+spring:
+  application:
+    name: palm-bank-life-web
+  datasource:
+    url: jdbc:mysql://rm-bp178w0l8fj18oiw5do.mysql.rds.aliyuncs.com:3306/palm-bank?allowPublicKeyRetrieval=true&useUnicode=true&characterEncoding=UTF8&&useSSL=false&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    username: root
+    password: Neituiya2024
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 30000
+      maximum-pool-size: 5
+      minimum-idle: 5
+      max-lifetime: 1800000
+  redis:
+    redisson:
+      config: |
+        singleServerConfig:
+          idleConnectionTimeout: 10000
+          connectTimeout: 10000
+          timeout: 3000
+          retryAttempts: 3
+          retryInterval: 1500
+          username: "redisroot"
+          password: "Neituiya2024"
+          subscriptionsPerConnection: 5
+          clientName: null
+          address: "redis://42.121.249.67:6379"
+          subscriptionConnectionMinimumIdleSize: 1
+          subscriptionConnectionPoolSize: 5
+          connectionMinimumIdleSize: 5
+          connectionPoolSize: 5
+          database: 0
+          dnsMonitoringInterval: 5000
+        threads: 0
+        nettyThreads: 0
+#  elasticsearch:
+#
+#    uris:
+#      - 192.168.75.128:9200
+#      - 192.168.75.1c29:9200
+#      - 192.168.75.130:9200
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+
+logging:
+  config: classpath:log4j2.xml

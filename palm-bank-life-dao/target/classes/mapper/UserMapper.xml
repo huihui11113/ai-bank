@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.user.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.user.pojo.UserPO">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+        <result property="schoolName" column="school_name" jdbcType="VARCHAR"/>
+        <result property="gender" column="gender" jdbcType="TINYINT"/>
+        <result property="phone" column="phone" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="logo" column="logo" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="cardId" column="card_id" jdbcType="VARCHAR"/>
+        <result property="balance" column="balance" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,nickname,school_name,
+        gender,phone,email,
+        logo,password,card_id,
+        balance,create_time,update_time,
+        is_delete
+    </sql>
+    <select id="selectOneByPhoneAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        phone = #{phone,jdbcType=VARCHAR}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <insert id="insertSelective">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="schoolName != null">school_name,</if>
+            <if test="gender != null">gender,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="logo != null">logo,</if>
+            <if test="password != null">password,</if>
+            <if test="cardId != null">card_id,</if>
+            <if test="balance != null">balance,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="nickname != null">#{nickname,jdbcType=VARCHAR},</if>
+            <if test="schoolName != null">#{schoolName,jdbcType=VARCHAR},</if>
+            <if test="gender != null">#{gender,jdbcType=TINYINT},</if>
+            <if test="phone != null">#{phone,jdbcType=VARCHAR},</if>
+            <if test="email != null">#{email,jdbcType=VARCHAR},</if>
+            <if test="logo != null">#{logo,jdbcType=VARCHAR},</if>
+            <if test="password != null">#{password,jdbcType=VARCHAR},</if>
+            <if test="cardId != null">#{cardId,jdbcType=VARCHAR},</if>
+            <if test="balance != null">#{balance,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="isDelete != null">#{isDelete,jdbcType=TINYINT},</if>
+        </trim>
+    </insert>
+    <select id="selectOneByIdAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        id = #{id,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <update id="updateSelective">
+        update user
+        <set>
+            <if test="nickname != null">nickname=#{nickname,jdbcType=VARCHAR},</if>
+            <if test="schoolName != null">school_name=#{schoolName,jdbcType=VARCHAR},</if>
+            <if test="gender != null">gender=#{gender,jdbcType=NUMERIC},</if>
+            <if test="phone != null">phone=#{phone,jdbcType=VARCHAR},</if>
+            <if test="email != null">email=#{email,jdbcType=VARCHAR},</if>
+            <if test="logo != null">logo=#{logo,jdbcType=VARCHAR},</if>
+            <if test="password != null">password=#{password,jdbcType=VARCHAR},</if>
+            <if test="cardId != null">card_id=#{cardId,jdbcType=VARCHAR},</if>
+            <if test="balance != null">balance=#{balance,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">create_time=#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">update_time=#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="isDelete != null">is_delete=#{isDelete,jdbcType=NUMERIC},</if>
+        </set>
+        where id = #{id,jdbcType=NUMERIC}
+    </update>
+    <select id="selectAllByNicknameLikeOrCardIdLike" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        nickname like concat('%',#{keyWords,jdbcType=VARCHAR},'%')
+        OR card_id like concat('%',#{keyWords,jdbcType=VARCHAR},'%')
+        and is_delete = #{isDelete,jdbcType=NUMERIC} limit 100
+    </select>
+    <select id="selectAllByIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <select id="search" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        nickname like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+        OR card_id like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+        and is_delete = 0
+        order by id desc
+        limit #{offset,jdbcType=NUMERIC},#{limit,jdbcType=NUMERIC}
+    </select>
+
+    <select id="searchCount" resultType="int">
+        select count(*)
+        from user
+        where nickname like concat('%', #{keywords,jdbcType=VARCHAR}, '%')
+           OR card_id like concat('%', #{keywords,jdbcType=VARCHAR}, '%')
+            and is_delete = 0
+    </select>
+    <select id="selectUsers" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user
+        where
+        id in
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=NUMERIC}
+        </foreach>
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+
+</mapper>

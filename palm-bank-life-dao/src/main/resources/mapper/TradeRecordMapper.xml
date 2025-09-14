@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.trade.mapper.TradeRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.trade.pojo.TradeRecordPO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tradeChannel" column="trade_channel" jdbcType="INTEGER"/>
+        <result property="tradeType" column="trade_type" jdbcType="INTEGER"/>
+        <result property="payUserId" column="pay_user_id" jdbcType="INTEGER"/>
+        <result property="payeeUserId" column="payee_user_id" jdbcType="INTEGER"/>
+        <result property="amount" column="amount" jdbcType="VARCHAR"/>
+        <result property="payAccount" column="pay_account" jdbcType="VARCHAR"/>
+        <result property="payeeAccount" column="payee_account" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="tradeTime" column="trade_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id
+        ,trade_channel,trade_type,
+        pay_user_id,payee_user_id,amount,
+        pay_account,payee_account,remark,
+        trade_time,update_time,is_delete
+    </sql>
+    <insert id="insertSelective">
+        insert into trade_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="tradeChannel != null">trade_channel,</if>
+            <if test="tradeType != null">trade_type,</if>
+            <if test="payUserId != null">pay_user_id,</if>
+            <if test="payeeUserId != null">payee_user_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="payAccount != null">pay_account,</if>
+            <if test="payeeAccount != null">payee_account,</if>
+            <if test="remark != null">remark,</if>
+            <if test="tradeTime != null">trade_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="tradeChannel != null">#{tradeChannel,jdbcType=INTEGER},</if>
+            <if test="tradeType != null">#{tradeType,jdbcType=INTEGER},</if>
+            <if test="payUserId != null">#{payUserId,jdbcType=INTEGER},</if>
+            <if test="payeeUserId != null">#{payeeUserId,jdbcType=INTEGER},</if>
+            <if test="amount != null">#{amount,jdbcType=VARCHAR},</if>
+            <if test="payAccount != null">#{payAccount,jdbcType=VARCHAR},</if>
+            <if test="payeeAccount != null">#{payeeAccount,jdbcType=VARCHAR},</if>
+            <if test="remark != null">#{remark,jdbcType=VARCHAR},</if>
+            <if test="tradeTime != null">#{tradeTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="isDelete != null">#{isDelete,jdbcType=TINYINT},</if>
+        </trim>
+    </insert>
+    <select id="selectAllByPayUserIdAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        pay_user_id = #{payUserId,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <select id="search" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        <if test="keywords != null">
+            (
+            remark like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            pay_account like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            payee_account like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            ) and
+        </if>
+        is_delete = 0
+        order by id desc
+        limit #{offset,jdbcType=NUMERIC},#{limit,jdbcType=NUMERIC}
+    </select>
+
+    <select id="searchCount" resultType="int">
+        select
+        count(*)
+        from trade_record
+        where
+        <if test="keywords != null">
+            (
+            remark like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            pay_account like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            payee_account like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            ) and
+        </if>
+        is_delete = 0
+    </select>
+    <select id="selectByRemarkLike" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        remark like  like concat('%', #{remark,jdbcType=VARCHAR},'%')
+    </select>
+    <select id="selectAllByPayeeUserIdAndTradeChannelAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        payee_user_id = #{payeeUserId,jdbcType=NUMERIC}
+        AND trade_channel = #{tradeChannel,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <select id="selectAllByPayUserIdAndTradeChannelAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        pay_user_id = #{payUserId,jdbcType=NUMERIC}
+        AND trade_channel = #{tradeChannel,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <select id="selectAllByPayeeUserIdAndTradeChannelAndIsDeleteAndTradeTimeBetween" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        payee_user_id = #{payeeUserId,jdbcType=NUMERIC}
+        AND trade_channel = #{tradeChannel,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+        AND trade_time between #{beginTradeTime,jdbcType=TIMESTAMP} and #{endTradeTime,jdbcType=TIMESTAMP}
+    </select>
+    <select id="selectAllByPayUserIdAndTradeChannelAndIsDeleteAndTradeTimeBetween" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from trade_record
+        where
+        pay_user_id = #{payUserId,jdbcType=NUMERIC}
+        AND trade_channel = #{tradeChannel,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+        AND trade_time between #{beginTradeTime,jdbcType=TIMESTAMP} and #{endTradeTime,jdbcType=TIMESTAMP}
+    </select>
+</mapper>

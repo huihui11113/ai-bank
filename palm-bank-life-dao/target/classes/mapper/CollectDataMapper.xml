@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.community.mapper.CollectDataMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.community.pojo.CollectDataPO">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="collectUserId" column="collect_user_id" jdbcType="INTEGER"/>
+            <result property="collectEntityId" column="collect_entity_id" jdbcType="BIGINT"/>
+            <result property="collectEntityType" column="collect_entity_type" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,collect_user_id,collect_entity_id,
+        collect_entity_type,create_time,update_time
+    </sql>
+    <insert id="insertSelective" useGeneratedKeys="true">
+        insert into collect_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="collectUserId != null">collect_user_id,</if>
+            <if test="collectEntityId != null">collect_entity_id,</if>
+            <if test="collectEntityType != null">collect_entity_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="collectUserId != null">#{collectUserId,jdbcType=INTEGER},</if>
+            <if test="collectEntityId != null">#{collectEntityId,jdbcType=BIGINT},</if>
+            <if test="collectEntityType != null">#{collectEntityType,jdbcType=INTEGER},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <select id="checkHasCollect" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from collect_data
+        where
+        collect_user_id = #{collectUserId,jdbcType=NUMERIC}
+        AND collect_entity_id = #{collectEntityId,jdbcType=NUMERIC}
+        AND collect_entity_type = #{collectEntityType,jdbcType=NUMERIC}
+    </select>
+    <delete id="deleteById">
+        delete from collect_data
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </delete>
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from collect_data
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
+    <select id="selectByCollectUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from collect_data
+        where
+        collect_user_id = #{collectUserId,jdbcType=NUMERIC}
+    </select>
+
+</mapper>

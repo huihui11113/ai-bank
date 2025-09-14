@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.community.mapper.ZanDataMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.community.pojo.ZanDataPO">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="zanUserId" column="zan_user_id" jdbcType="INTEGER"/>
+            <result property="zanEntityId" column="zan_entity_id" jdbcType="BIGINT"/>
+            <result property="zanEntityType" column="zan_entity_type" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,zan_user_id,zan_entity_id,
+        zan_entity_type,create_time,update_time
+    </sql>
+    <insert id="insertSelective">
+        insert into zan_data
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="zanUserId != null">zan_user_id,</if>
+            <if test="zanEntityId != null">zan_entity_id,</if>
+            <if test="zanEntityType != null">zan_entity_type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="zanUserId != null">#{zanUserId,jdbcType=INTEGER},</if>
+            <if test="zanEntityId != null">#{zanEntityId,jdbcType=BIGINT},</if>
+            <if test="zanEntityType != null">#{zanEntityType,jdbcType=INTEGER},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <delete id="deleteLikeInfo">
+        delete from zan_data
+        where
+        zan_user_id = #{zanUserId,jdbcType=NUMERIC}
+        AND zan_entity_id = #{zanEntityId,jdbcType=NUMERIC}
+        AND zan_entity_type = #{zanEntityType,jdbcType=NUMERIC}
+    </delete>
+</mapper>

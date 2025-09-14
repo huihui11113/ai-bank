@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.community.mapper.CommentMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.community.pojo.CommentPO">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="commentUserId" column="comment_user_id" jdbcType="INTEGER"/>
+            <result property="commentEntityId" column="comment_entity_id" jdbcType="BIGINT"/>
+            <result property="commentEntityType" column="comment_entity_type" jdbcType="INTEGER"/>
+            <result property="commentContent" column="comment_content" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,comment_user_id,comment_entity_id,
+        comment_entity_type,comment_content,create_time,
+        update_time
+    </sql>
+    <insert id="insertSelective" useGeneratedKeys="true">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="commentUserId != null">comment_user_id,</if>
+            <if test="commentEntityId != null">comment_entity_id,</if>
+            <if test="commentEntityType != null">comment_entity_type,</if>
+            <if test="commentContent != null">comment_content,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="commentUserId != null">#{commentUserId,jdbcType=INTEGER},</if>
+            <if test="commentEntityId != null">#{commentEntityId,jdbcType=BIGINT},</if>
+            <if test="commentEntityType != null">#{commentEntityType,jdbcType=INTEGER},</if>
+            <if test="commentContent != null">#{commentContent,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <select id="selectOneById" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from comment
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </select>
+    <delete id="deleteById">
+        delete from comment
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </delete>
+    <select id="pageSearchComment" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from comment
+        where
+        comment_entity_id = #{commentEntityId,jdbcType=NUMERIC}
+        AND comment_entity_type = #{commentEntityType,jdbcType=NUMERIC}
+    </select>
+
+
+</mapper>

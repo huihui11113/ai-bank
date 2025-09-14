@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.community.mapper.CommunityPostMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.community.pojo.CommunityPostPO">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="richContent" column="rich_content" jdbcType="VARCHAR"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="zanCnt" column="zan_cnt" jdbcType="INTEGER"/>
+            <result property="collectCnt" column="collect_cnt" jdbcType="INTEGER"/>
+            <result property="viewCnt" column="view_cnt" jdbcType="INTEGER"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,title,content,
+        rich_content,user_id,zan_cnt,
+        collect_cnt,view_cnt,create_time,
+        update_time
+    </sql>
+
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from community_post
+        where id = #{id,jdbcType=BIGINT}
+    </select>
+
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete
+        from community_post
+        where id = #{id,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" keyColumn="id" keyProperty="id"
+            parameterType="com.life.bank.palm.dao.community.pojo.CommunityPostPO" useGeneratedKeys="true">
+        insert into community_post
+        ( id, title, content
+        , rich_content, user_id, zan_cnt
+        , collect_cnt, view_cnt, create_time
+        , update_time)
+        values ( #{id,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{content,jdbcType=VARCHAR}
+               , #{richContent,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{zanCnt,jdbcType=VARCHAR}
+               , #{collectCnt,jdbcType=VARCHAR}, #{viewCnt,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+               , #{updateTime,jdbcType=TIMESTAMP})
+    </insert>
+    <insert id="insertSelective" keyColumn="id" keyProperty="id"
+            parameterType="com.life.bank.palm.dao.community.pojo.CommunityPostPO" useGeneratedKeys="true">
+        insert into community_post
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null">title,</if>
+            <if test="content != null">content,</if>
+            <if test="richContent != null">rich_content,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="zanCnt != null">zan_cnt,</if>
+            <if test="collectCnt != null">collect_cnt,</if>
+            <if test="viewCnt != null">view_cnt,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=BIGINT},</if>
+            <if test="title != null">#{title,jdbcType=VARCHAR},</if>
+            <if test="content != null">#{content,jdbcType=VARCHAR},</if>
+            <if test="richContent != null">#{richContent,jdbcType=VARCHAR},</if>
+            <if test="userId != null">#{userId,jdbcType=INTEGER},</if>
+            <if test="zanCnt != null">#{zanCnt,jdbcType=VARCHAR},</if>
+            <if test="collectCnt != null">#{collectCnt,jdbcType=VARCHAR},</if>
+            <if test="viewCnt != null">#{viewCnt,jdbcType=VARCHAR},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.life.bank.palm.dao.community.pojo.CommunityPostPO">
+        update community_post
+        <set>
+            <if test="title != null">
+                title = #{title,jdbcType=VARCHAR},
+            </if>
+            <if test="content != null">
+                content = #{content,jdbcType=VARCHAR},
+            </if>
+            <if test="richContent != null">
+                rich_content = #{richContent,jdbcType=VARCHAR},
+            </if>
+            <if test="userId != null">
+                user_id = #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="zanCnt != null">
+                zan_cnt = #{zanCnt,jdbcType=VARCHAR},
+            </if>
+            <if test="collectCnt != null">
+                collect_cnt = #{collectCnt,jdbcType=VARCHAR},
+            </if>
+            <if test="viewCnt != null">
+                view_cnt = #{viewCnt,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.life.bank.palm.dao.community.pojo.CommunityPostPO">
+        update community_post
+        set title        = #{title,jdbcType=VARCHAR},
+            content      = #{content,jdbcType=VARCHAR},
+            rich_content = #{richContent,jdbcType=VARCHAR},
+            user_id      = #{userId,jdbcType=INTEGER},
+            zan_cnt      = #{zanCnt,jdbcType=VARCHAR},
+            collect_cnt  = #{collectCnt,jdbcType=VARCHAR},
+            view_cnt     = #{viewCnt,jdbcType=VARCHAR},
+            create_time  = #{createTime,jdbcType=TIMESTAMP},
+            update_time  = #{updateTime,jdbcType=TIMESTAMP}
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <select id="getByUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from community_post
+        where
+        user_id = #{userId,jdbcType=NUMERIC}
+        limit #{offset,jdbcType=NUMERIC},#{limit,jdbcType=NUMERIC}
+    </select>
+    <select id="getByTitleLikeOrderByIdDesc" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from community_post
+        where
+        <if test="title != null">
+            title like #{title,jdbcType=VARCHAR} and
+        </if>
+        1=1
+        order by id desc
+        limit #{offset,jdbcType=NUMERIC},#{limit,jdbcType=NUMERIC}
+    </select>
+
+    <select id="getByTitleLikeCount" resultType="int">
+        select
+            count(*)
+        from community_post
+        where
+        <if test="title != null">
+            title like #{title,jdbcType=VARCHAR} and
+        </if>
+        1=1
+    </select>
+
+
+
+    <select id="search" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from community_post
+        where
+        <if test="keywords != null">
+            (
+            title like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            rich_content like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            content like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            )
+            and
+        </if>
+        1=1
+        order by id desc
+        limit #{offset,jdbcType=NUMERIC},#{limit,jdbcType=NUMERIC}
+    </select>
+
+    <select id="searchCount" resultType="int">
+        select
+            count(*)
+        from community_post
+        where
+        <if test="keywords != null">
+            (
+            title like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            rich_content like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            or
+            content like concat('%',#{keywords,jdbcType=VARCHAR},'%')
+            )
+            and
+        </if>
+        1=1
+    </select>
+    <update id="updateZanCntById">
+        update community_post
+        set zan_cnt = zan_cnt + #{zanDelta,jdbcType=NUMERIC}
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </update>
+    <update id="updateCollectCntById">
+        update community_post
+        set collect_cnt = collect_cnt + #{collectDelta,jdbcType=NUMERIC}
+        where
+        id = #{id,jdbcType=NUMERIC}
+    </update>
+    <select id="selectByIdIn" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from community_post
+        where
+        id in
+        <foreach collection="idList" item="item" open="(" close=")" separator=",">
+            #{item,jdbcType=NUMERIC}
+        </foreach>
+    </select>
+</mapper>

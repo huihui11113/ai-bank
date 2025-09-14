@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.life.bank.palm.dao.user.mapper.UserTokenMapper">
+
+    <resultMap id="BaseResultMap" type="com.life.bank.palm.dao.user.pojo.UserTokenPO">
+            <id property="id" column="id" jdbcType="INTEGER"/>
+            <result property="userId" column="user_id" jdbcType="INTEGER"/>
+            <result property="token" column="token" jdbcType="VARCHAR"/>
+            <result property="platform" column="platform" jdbcType="TINYINT"/>
+            <result property="expireTime" column="expire_time" jdbcType="TIMESTAMP"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,user_id,token,
+        platform,expire_time,create_time,
+        update_time,is_delete
+    </sql>
+    <update id="updateIsDeleteByUserIdAndPlatform">
+        update user_token
+        set is_delete = #{isDelete,jdbcType=NUMERIC}
+        where user_id = #{userId,jdbcType=NUMERIC}
+          AND platform = #{platform,jdbcType=NUMERIC}
+    </update>
+    <insert id="insertSelective">
+        insert into user_token
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="token != null">token,</if>
+            <if test="platform != null">platform,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="isDelete != null">is_delete,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id,jdbcType=INTEGER},</if>
+            <if test="userId != null">#{userId,jdbcType=INTEGER},</if>
+            <if test="token != null">#{token,jdbcType=VARCHAR},</if>
+            <if test="platform != null">#{platform,jdbcType=TINYINT},</if>
+            <if test="expireTime != null">#{expireTime,jdbcType=TIMESTAMP},</if>
+            <if test="createTime != null">#{createTime,jdbcType=TIMESTAMP},</if>
+            <if test="updateTime != null">#{updateTime,jdbcType=TIMESTAMP},</if>
+            <if test="isDelete != null">#{isDelete,jdbcType=TINYINT},</if>
+        </trim>
+    </insert>
+    <update id="updateIsDeleteByToken">
+        update user_token
+        set is_delete = #{isDelete,jdbcType=NUMERIC}
+        where token = #{token,jdbcType=VARCHAR}
+    </update>
+    <select id="selectByTokenAndPlatformAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_token
+        where
+        token = #{token,jdbcType=VARCHAR}
+        AND platform = #{platform,jdbcType=NUMERIC}
+        AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+    <select id="selectOneByTokenAndPlatformAndIsDelete" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from user_token
+        where token = #{token,jdbcType=VARCHAR}
+          AND platform = #{platform,jdbcType=NUMERIC}
+          AND is_delete = #{isDelete,jdbcType=NUMERIC}
+    </select>
+</mapper>
